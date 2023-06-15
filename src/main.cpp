@@ -1,20 +1,19 @@
 #include <Arduino.h>
-#include "SoftwareSerial.h"
+#include "Pins.h"
 #include "SteeringController.h"
+#include "CommManager.h"
 
-#define dir A1
-#define step A2
-
-SteeringController steeringController(dir, step);
+SteeringController steeringController(dirPin, stepPin);
+CommManager commManager;
 
 void setup()
 {
     steeringController.init();
-    steeringController.setPosition(-350);
+    commManager.init(&Serial, false);
 }
 
 void loop()
 {
     steeringController.eventLoop();
-
+    commManager.eventLoop();
 }
