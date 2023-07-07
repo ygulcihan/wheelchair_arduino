@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define dirPin A1
-#define stepPin A2
+#define DIR_PIN A1
+#define STEP_PIN A2
 
 #endif // PINS_H
