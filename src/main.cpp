@@ -4,7 +4,7 @@
 #include "CommManager.h"
 #include "ThrottleController.h"
 
-SteeringController steeringController(DIR_PIN, STEP_PIN);
+SteeringController steeringController(DIR_PIN, STEP_PIN, ENDSTOP_PIN);
 CommManager commManager;
 ThrottleController throttleController;
 
@@ -20,19 +20,19 @@ void setup()
         digitalWrite(LED_BUILTIN, LOW);
         delay(100);
     }
-    //throttleController.testSweep();
+    // throttleController.testSweep();
     digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop()
 {
     steeringController.eventLoop();
-    commManager.eventLoop();
-    if (commManager.isConnected())
-        throttleController.setThrottlePosition(commManager.getSpeed());
-    else
+
+    if (steeringController.isHomed())
     {
-        throttleController.setThrottlePosition(0);
-        digitalWrite(LED_BUILTIN, LOW);
+        commManager.eventLoop();
+
+        throttleController.setThrottlePosition(commManager.getSpeed());
+        steeringController.setPosition(commManager.getSteeringPosition());
     }
 }

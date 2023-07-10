@@ -18,12 +18,15 @@ void CommManager::sendObstacleStatus(bool pObstacleDetected)
 
 void CommManager::parseData(String &data)
 {
-    // S:100,P:-50,D:1
+    // S:100,P:-50
     this->speed = data.substring(data.indexOf(F("S:")) + 2).toInt();
     this->steeringPosition = data.substring(data.indexOf(F("P:")) + 2).toInt();
+    this->steeringPosition = map(this->steeringPosition, -35, 35, -100, 100);
 
     if (this->echo)
     {
+        this->serial->print(F("Recieved: "));
+        this->serial->println(data);
         this->serial->print(F("Speed: "));
         this->serial->println(this->speed);
         this->serial->print(F("Steering position: "));
@@ -39,21 +42,35 @@ void CommManager::eventLoop()
         this->steeringPosition = 0;
     }
 
-    String data = Serial.readStringUntil('\n');
-    if (data.length() > 2) // if data is recieved
+    Serial.setTimeout(10);
+    static String data = "";
+    static bool dataReady = false;
+
+    int tChar = this->serial->read();
+
+    if (tChar != -1 && tChar != 0 && (isAlphaNumeric(tChar) || tChar == ',' || tChar == ':' || tChar == '-'))
+        data += (char)tChar;
+
+    if ((char)tChar == '\n')
+        dataReady = true;
+
+    if (dataReady) // if data is recieved
     {
         this->messageLastRecieved = millis();
-        this->connected = true;
         data.toUpperCase();
 
         if (data == "CHK")
         {
             for (uint8_t i = 0; i < 3; i++)
                 Serial.print(F("OK\n"));
+
         }
 
         else
             this->parseData(data);
+
+        data = "";
+        dataReady = false;
     }
 }
 
@@ -65,9 +82,4 @@ uint8_t CommManager::getSpeed()
 int16_t CommManager::getSteeringPosition()
 {
     return this->steeringPosition;
-}
-
-bool CommManager::isConnected()
-{
-    return this->connected;
 }

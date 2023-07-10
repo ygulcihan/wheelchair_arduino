@@ -20,16 +20,23 @@ private:
     uint16_t remainingStepCount;
 
     uint8_t dirPin, stepPin;
+    uint8_t endStopPin;
     uint16_t periodMin = 250, periodMax = 3000;
     uint8_t steeringSpeed = 15;
 
-    uint16_t speed2Period(uint8_t speed);
+    SteeringDirection direction;
 
+    bool homed = false;
+
+    unsigned long speed2Period(uint8_t speed);
+
+    void home();
     void step(uint16_t nrOfSteps, SteeringDirection dir);
 
 public:
-    SteeringController(uint8_t dirPin, uint8_t stepPin);
+    SteeringController(uint8_t dirPin, uint8_t stepPin, uint8_t endStopPin);
     void init();
+    bool isHomed();
     void setPosition(int16_t position);
     void eventLoop();
 };
