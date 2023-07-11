@@ -18,6 +18,8 @@ public:
     CommManager();
     void init(HardwareSerial *serial, bool echo = false);
 
+    bool homeSteering = false;
+
     uint8_t getSpeed();
     int16_t getSteeringPosition();
 

@@ -37,7 +37,8 @@ uint16_t ThrottleController::calculateDacValueFromVoltage(double pVoltage)
 
 void ThrottleController::setThrottlePosition(uint8_t pThrottlePosition)
 {
-  long voltageX100 = map(pThrottlePosition, 0, 40, 0, 150);
+  uint8_t throttlePosition = (pThrottlePosition > 20) ? 20 : pThrottlePosition;
+  long voltageX100 = map(throttlePosition, 0, 25, 0, 45);
   double voltage = voltageX100 / 100.0;
 
   this->dac->setVoltage(calculateDacValueFromVoltage(voltage), false);

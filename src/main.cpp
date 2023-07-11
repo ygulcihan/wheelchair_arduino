@@ -32,6 +32,13 @@ void loop()
     {
         commManager.eventLoop();
 
+        if (commManager.homeSteering)
+        {
+            steeringController.homed = false;
+            commManager.homeSteering = false;
+            return;
+        }
+
         throttleController.setThrottlePosition(commManager.getSpeed());
         steeringController.setPosition(commManager.getSteeringPosition());
     }

@@ -36,7 +36,7 @@ void CommManager::parseData(String &data)
 
 void CommManager::eventLoop()
 {
-    if (millis() - this->messageLastRecieved >= 1000)
+    if (millis() - this->messageLastRecieved >= 400)
     {
         this->speed = 0;
         this->steeringPosition = 0;
@@ -63,7 +63,11 @@ void CommManager::eventLoop()
         {
             for (uint8_t i = 0; i < 3; i++)
                 Serial.print(F("OK\n"));
+        }
 
+        else if (data == "HOME")
+        {
+            this->homeSteering = true;
         }
 
         else

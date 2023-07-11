@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-//TODO: determine step angle
-//TODO: determine max/min steering position
-//TODO: implement homing procedure
+// TODO: determine step angle
+// TODO: determine max/min steering position
+// TODO: implement homing procedure
 
 typedef enum
 {
@@ -26,14 +26,14 @@ private:
 
     SteeringDirection direction;
 
-    bool homed = false;
-
     unsigned long speed2Period(uint8_t speed);
 
     void home();
     void step(uint16_t nrOfSteps, SteeringDirection dir);
 
 public:
+    bool homed = false;
+
     SteeringController(uint8_t dirPin, uint8_t stepPin, uint8_t endStopPin);
     void init();
     bool isHomed();
