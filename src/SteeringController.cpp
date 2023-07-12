@@ -37,7 +37,14 @@ void SteeringController::step(uint16_t nrOfSteps, SteeringDirection dir)
     if (nrOfSteps == 0)
         return;
 
+    static SteeringDirection lastDir = RIGHT;
+
     digitalWrite(dirPin, (uint8_t)dir);
+    if (lastDir != dir)
+    {
+        delay(1);
+        lastDir = dir;
+    }
     this->direction = dir;
     this->remainingStepCount = nrOfSteps * 2;
 }
