@@ -46,7 +46,7 @@ void SteeringController::step(uint16_t nrOfSteps, SteeringDirection dir)
         lastDir = dir;
     }
     this->direction = dir;
-    this->remainingStepCount = nrOfSteps * 2;
+    this->remainingStepCount = nrOfSteps;
 }
 
 bool SteeringController::isHomed()
@@ -71,11 +71,12 @@ void SteeringController::eventLoop()
         {
             digitalWrite(stepPin, stepPinState);
             stepPinState = !stepPinState;
-            remainingStepCount--;
             lastStepTime = micros();
 
-            if (stepPinState == HIGH)
+            if (stepPinState == HIGH) // driver steps on rising edge
             {
+                remainingStepCount--;
+
                 if (this->direction)
                     this->currentPosition++;
                 else
